@@ -4,11 +4,19 @@ class MaskModel {
   final Tuple2<int, int> topLeft;
   final Tuple2<int, int> bottomRight;
   final int id;
+  bool visible = false;
+  late String content = "";
 
   MaskModel(
-      {required this.bottomRight, required this.topLeft, required this.id}) {
+      {required this.bottomRight,
+      required this.topLeft,
+      required this.id,
+      this.content = ""}) {
     assert(
         bottomRight.item1 > topLeft.item1 && bottomRight.item2 > topLeft.item2);
+    if (content == "") {
+      content = "Mask $id";
+    }
   }
 
   @override
