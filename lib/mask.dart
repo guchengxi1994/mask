@@ -17,11 +17,15 @@ class MaskWidget extends StatefulWidget {
   final Image image;
 
   @override
-  State<MaskWidget> createState() => _MaskWidgetState();
+  State<MaskWidget> createState() => MaskWidgetState();
 }
 
-class _MaskWidgetState extends State<MaskWidget> {
+class MaskWidgetState extends State<MaskWidget> {
   late final MaskNotifier maskNotifier;
+
+  filter(int widthThres, int heightThres) {
+    maskNotifier.filter(widthThres, heightThres);
+  }
 
   @override
   void initState() {
@@ -90,8 +94,11 @@ class _MaskWidgetState extends State<MaskWidget> {
 
   List<Widget> _masks(BuildContext ctx) {
     List<Widget> result = [];
-    for (final i in widget.models) {
-      bool visible = ctx.watch<MaskNotifier>().getVisible(i.id);
+    final models = ctx.watch<MaskNotifier>().maskModels;
+
+    for (final i in models) {
+      bool visible = ctx.read<MaskNotifier>().getVisible(i.id);
+
       result.add(Positioned(
         left: i.left,
         top: i.top,

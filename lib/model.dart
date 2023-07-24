@@ -1,4 +1,48 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:tuple/tuple.dart';
+
+class OcrResults {
+  List<Results>? results;
+
+  OcrResults({this.results});
+
+  OcrResults.fromJson(Map<String, dynamic> json) {
+    if (json['results'] != null) {
+      results = <Results>[];
+      json['results'].forEach((v) {
+        results!.add(Results.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Results {
+  String? box;
+  String? text;
+
+  Results({this.box, this.text});
+
+  Results.fromJson(Map<String, dynamic> json) {
+    box = json['box'];
+    text = json['text'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['box'] = box;
+    data['text'] = text;
+    return data;
+  }
+}
 
 class MaskModel {
   final Tuple2<int, int> topLeft;
@@ -40,5 +84,29 @@ class MaskModel {
   @override
   String toString() {
     return "[id] $id, [top-left] $topLeft, [bottom-right] $bottomRight";
+  }
+
+  bool satisfied({int thres1 = 30, int thres2 = 30}) {
+    return width >= thres1 && height >= thres2;
+  }
+
+  static MaskModel? fromResults(int id, Results results,
+      {double widthFactor = 1, double heightFactor = 1}) {
+    String position = results.box ?? "";
+    List<String> _positions = position.split(" ");
+    if (_positions.length < 8) {
+      return null;
+    }
+
+    final leftTop = Tuple2(
+      (int.parse(_positions[1]) * heightFactor).ceil(),
+      (int.parse(_positions[0]) * widthFactor).ceil(),
+    );
+    final rightBottom = Tuple2(
+      (int.parse(_positions[5]) * heightFactor).ceil(),
+      (int.parse(_positions[4]) * widthFactor).ceil(),
+    );
+
+    return MaskModel(bottomRight: rightBottom, topLeft: leftTop, id: id);
   }
 }
