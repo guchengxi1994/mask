@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 
 import 'app.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await hotKeyManager.unregisterAll();
   runApp(const MyApp());
 }
 

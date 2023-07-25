@@ -8,11 +8,14 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mask/mask.dart';
 import 'package:mask/model.dart';
 import 'package:mask/native.dart';
 import 'package:menu_bar/menu_bar.dart';
 import 'dart:ui' as ui;
+
+import 'hotkeys.dart';
 
 const XTypeGroup typeGroup = XTypeGroup(
   label: 'images',
@@ -38,8 +41,21 @@ class _AppState extends State<App> {
         () {
           NativeOcr.instance.initOcr();
         },
-      ).then((value) {
+      ).then((value) async {
         debugPrint("[flutter] ocr inited");
+        await hotKeyManager.register(
+          QuitAppKey,
+          keyDownHandler: (hotKey) {
+            exit(0);
+          },
+        );
+        await hotKeyManager.register(
+          SaveFileKey,
+          keyDownHandler: (hotKey) {
+            debugPrint("Save file");
+          },
+        );
+        debugPrint("[flutter] hotkey inited");
       });
     });
 

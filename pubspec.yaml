@@ -13,6 +13,7 @@ dependencies:
   file_selector: ^1.0.0
   flutter:
     sdk: flutter
+  hotkey_manager: ^0.1.7
   menu_bar: ^0.5.3
   provider: ^6.0.5
   screenshot: ^2.1.0
