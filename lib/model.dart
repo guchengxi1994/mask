@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:mask/detailed_setting_model.dart';
 import 'package:tuple/tuple.dart';
 
 class OcrResults {
@@ -50,12 +51,14 @@ class MaskModel {
   final int id;
   bool visible = false;
   late String content = "";
+  final String text;
 
   MaskModel(
       {required this.bottomRight,
       required this.topLeft,
       required this.id,
-      this.content = ""}) {
+      this.content = "",
+      required this.text}) {
     assert(
         bottomRight.item1 > topLeft.item1 && bottomRight.item2 > topLeft.item2);
     if (content == "") {
@@ -90,6 +93,15 @@ class MaskModel {
     return width >= thres1 && height >= thres2;
   }
 
+  bool satisfiedComplex(DetailedSettingModel model) {
+    return width > model.widthMin! &&
+        width < model.widthMax! &&
+        height > model.heightMin! &&
+        height < model.heightMax! &&
+        text.contains(model.include!) &&
+        (model.exclude == "" ? true : text.contains(model.exclude!));
+  }
+
   static MaskModel? fromResults(int id, Results results,
       {double widthFactor = 1, double heightFactor = 1}) {
     String position = results.box ?? "";
@@ -107,6 +119,10 @@ class MaskModel {
       (int.parse(_positions[4]) * widthFactor).ceil(),
     );
 
-    return MaskModel(bottomRight: rightBottom, topLeft: leftTop, id: id);
+    return MaskModel(
+        bottomRight: rightBottom,
+        topLeft: leftTop,
+        id: id,
+        text: results.text ?? "");
   }
 }

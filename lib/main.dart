@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:mask/setting_notifier.dart';
+import 'package:provider/provider.dart';
 
 import 'app.dart';
 
@@ -16,14 +19,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Mask',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => SettingNotifier())],
+      child: MaterialApp(
+        navigatorObservers: [FlutterSmartDialog.observer],
+        builder: FlutterSmartDialog.init(),
+        debugShowCheckedModeBanner: false,
+        title: 'Mask',
+        theme: ThemeData(
+          useMaterial3: true,
+        ),
+        home: const App(),
       ),
-      home: const App(),
     );
   }
 }

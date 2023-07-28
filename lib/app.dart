@@ -8,14 +8,19 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:mask/mask.dart';
 import 'package:mask/model.dart';
 import 'package:mask/native.dart';
 import 'package:menu_bar/menu_bar.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
+import 'detailed_setting.dart';
 import 'hotkeys.dart';
+import 'setting_notifier.dart';
 
 const XTypeGroup typeGroup = XTypeGroup(
   label: 'images',
@@ -46,7 +51,9 @@ class _AppState extends State<App> {
         await hotKeyManager.register(
           QuitAppKey,
           keyDownHandler: (hotKey) {
-            exit(0);
+            if (Platform.isWindows) {
+              exit(0);
+            }
           },
         );
         await hotKeyManager.register(
@@ -120,6 +127,8 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<SettingNotifier>().model;
+
     return MenuBarWidget(
         barStyle: const MenuStyle(
           padding: MaterialStatePropertyAll(EdgeInsets.zero),
@@ -145,10 +154,10 @@ class _AppState extends State<App> {
         enabled: true,
         barButtons: [
           BarButton(
-              text: const Text('File', style: TextStyle(color: Colors.white)),
+              text: const Text('文件', style: TextStyle(color: Colors.white)),
               submenu: SubMenu(menuItems: [
                 MenuButton(
-                  text: const Text('Open'),
+                  text: const Text('打开'),
                   icon: const Icon(Icons.file_open),
                   onTap: () async {
                     final XFile? file = await openFile(
@@ -167,26 +176,27 @@ class _AppState extends State<App> {
                   },
                 ),
                 MenuButton(
-                  text: const Text('Save'),
+                  text: const Text('保存'),
                   icon: const Icon(Icons.save),
                   shortcutText: 'Ctrl+S',
                   onTap: () {},
                 ),
                 MenuButton(
-                  text: const Text('Exit'),
+                  text: const Text('退出'),
                   icon: const Icon(Icons.exit_to_app),
                   shortcutText: 'Ctrl+Q',
                   onTap: () async {
-                    exit(0);
+                    if (Platform.isWindows) {
+                      exit(0);
+                    }
                   },
                 ),
               ])),
           BarButton(
-              text:
-                  const Text('Options', style: TextStyle(color: Colors.white)),
+              text: const Text('设置', style: TextStyle(color: Colors.white)),
               submenu: SubMenu(menuItems: [
                 MenuButton(
-                  text: const Text('Threshold'),
+                  text: const Text('阈值设置'),
                   icon: const Icon(Icons.three_k_sharp),
                   onTap: () async {
                     final (String, String)? r = await showCupertinoDialog(
@@ -254,47 +264,88 @@ class _AppState extends State<App> {
                     }
                   },
                 ),
+                const MenuDivider(),
+                MenuButton(
+                    text: const Text('详细设置'),
+                    icon: const Icon(Icons.details_sharp),
+                    onTap: () async {
+                      context
+                          .read<SettingNotifier>()
+                          .changeSettingFormVisiblity(true);
+                    }),
+                const MenuDivider(),
+                MenuButton(
+                    text: model == null
+                        ? const Text('套用上次的设置')
+                        : JustTheTooltip(
+                            preferredDirection: AxisDirection.right,
+                            content: SizedBox(
+                              width: 300,
+                              child: JsonView.map(
+                                model.toJson(),
+                                theme: const JsonViewTheme(
+                                    backgroundColor: Colors.white),
+                              ),
+                            ),
+                            child: const Text('套用上次的设置')),
+                    icon: const Icon(Icons.upcoming),
+                    onTap: model == null ? null : () {}),
               ]))
         ],
         child: Scaffold(
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  height: 50,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: progressValue,
-                          semanticsLabel: currentStatus,
+          body: Stack(
+            children: [
+              SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 30, right: 30),
+                          height: 50,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (data != null)
+                                Expanded(
+                                  child: LinearProgressIndicator(
+                                    value: progressValue,
+                                    semanticsLabel: currentStatus,
+                                  ),
+                                ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Text(currentStatus)
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(currentStatus)
-                    ],
-                  ),
-                ),
-                models.isEmpty
-                    ? SizedBox(
-                        width: imageWidth,
-                        height: imageHeight,
-                        child: data != null ? Image.memory(data!) : null,
-                      )
-                    : SizedBox(
-                        width: imageWidth,
-                        height: imageHeight,
-                        child: MaskWidget(
-                            key: globalKey,
-                            models: models,
-                            image: Image.memory(data!)),
-                      )
-              ],
-            ),
+                        models.isEmpty
+                            ? SizedBox(
+                                width: imageWidth,
+                                height: imageHeight,
+                                child:
+                                    data != null ? Image.memory(data!) : null,
+                              )
+                            : SizedBox(
+                                width: imageWidth,
+                                height: imageHeight,
+                                child: MaskWidget(
+                                    key: globalKey,
+                                    models: models,
+                                    image: Image.memory(data!)),
+                              )
+                      ],
+                    ),
+                  )),
+              Positioned(
+                  left: (MediaQuery.of(context).size.width - 600) / 2,
+                  top: 10,
+                  child: const DetailedSettingForm(
+                    width: 600,
+                    height: 500,
+                  ))
+            ],
           ),
         ));
   }

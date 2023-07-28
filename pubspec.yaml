@@ -10,10 +10,13 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   ffi: ^2.0.1
-  file_selector: ^1.0.0
   flutter:
     sdk: flutter
+  flutter_json_view: ^1.1.2
+  flutter_smart_dialog: ^4.9.0+6
+  file_selector: ^1.0.0
   hotkey_manager: ^0.1.7
+  just_the_tooltip: ^0.0.12
   menu_bar: ^0.5.3
   provider: ^6.0.5
   screenshot: ^2.1.0

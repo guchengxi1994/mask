@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask/detailed_setting_model.dart';
 
 import 'model.dart';
 
@@ -51,6 +52,21 @@ class MaskNotifier extends ChangeNotifier {
 
   removeById(int id) {
     models.retainWhere((element) => element.id != id);
+    notifyListeners();
+  }
+
+  apply(DetailedSettingModel? model) {
+    if (model == null) {
+      return;
+    }
+    filters.clear();
+
+    for (final i in models) {
+      if (i.satisfiedComplex(model)) {
+        filters.add(i);
+      }
+    }
+    filtered = true;
     notifyListeners();
   }
 }
