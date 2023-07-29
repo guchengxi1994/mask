@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'detailed_setting_model.dart';
+import '../models/detailed_setting_model.dart';
 
 class SettingNotifier extends ChangeNotifier {
   bool detailedSettingFormShow = false;

@@ -6,7 +6,7 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'dart:ffi' as ffi;
 
-import 'package:mask/extension.dart';
+import 'package:mask/utils/extension.dart';
 
 typedef CInitPaddleFunction = ffi.Void Function(
     ffi.Pointer<Utf8>, ffi.Pointer<Utf8>, ffi.Pointer<Utf8>);

@@ -4,11 +4,11 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mask/model.dart';
+import 'package:mask/models/model.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:super_context_menu/super_context_menu.dart';
-import 'notifier.dart';
+import '../notifiers/notifier.dart';
 
 class MaskWidget extends StatefulWidget {
   const MaskWidget({Key? key, required this.models, required this.image})

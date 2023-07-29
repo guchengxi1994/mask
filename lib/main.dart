@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:mask/setting_notifier.dart';
+import 'package:mask/notifiers/setting_notifier.dart';
 import 'package:provider/provider.dart';
 
-import 'app.dart';
+import 'app/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

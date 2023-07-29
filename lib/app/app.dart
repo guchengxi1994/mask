@@ -11,16 +11,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_json_view/flutter_json_view.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
-import 'package:mask/mask.dart';
-import 'package:mask/model.dart';
-import 'package:mask/native.dart';
+import 'package:mask/widgets/mask.dart';
+import 'package:mask/models/model.dart';
+import 'package:mask/utils/native.dart';
 import 'package:menu_bar/menu_bar.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
-import 'detailed_setting.dart';
-import 'hotkeys.dart';
-import 'setting_notifier.dart';
+import '../widgets/detailed_setting.dart';
+import '../utils/hotkeys.dart';
+import '../notifiers/setting_notifier.dart';
 
 const XTypeGroup typeGroup = XTypeGroup(
   label: 'images',

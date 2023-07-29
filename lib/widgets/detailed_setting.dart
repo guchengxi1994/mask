@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mask/detailed_setting_model.dart';
-import 'package:mask/dialog_utils.dart';
+import 'package:mask/models/detailed_setting_model.dart';
+import 'package:mask/utils/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
-import 'setting_notifier.dart';
+import '../notifiers/setting_notifier.dart';
 
 class DetailedSettingForm extends StatefulWidget {
   const DetailedSettingForm(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mask/detailed_setting_model.dart';
+import 'package:mask/models/detailed_setting_model.dart';
 
-import 'model.dart';
+import '../models/model.dart';
 
 class MaskNotifier extends ChangeNotifier {
   final List<MaskModel> models;

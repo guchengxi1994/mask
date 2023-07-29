@@ -1,6 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'package:mask/detailed_setting_model.dart';
+import 'package:mask/models/detailed_setting_model.dart';
 import 'package:tuple/tuple.dart';
 
 class OcrResults {
